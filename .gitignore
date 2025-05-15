@@ -5,3 +5,9 @@
 *.cfg
 chains/
 /Roman_PZ/.ipynb_checkpoints/
+
+# Ignore system and IDE files
+.DS_Store
+.idea/
+data_products/
+Roman_PZ/data_products/
