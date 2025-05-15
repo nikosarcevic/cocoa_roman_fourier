@@ -24,7 +24,7 @@ def test_file_saving_safe(tmp_path):
     rs = RomanGalaxySample(forecast_year="1", decimal_places=2)
     rs.lens_sample(save_file=True)
 
-    expected_file = tmp_path / "data_products" / "roman_lens_sample_pz_year_1.npy"
+    expected_file = tmp_path / "roman_lens_sample_pz_year_1.npy"
     assert expected_file.exists()
 
 def test_redshift_range_shape(roman_sample):
