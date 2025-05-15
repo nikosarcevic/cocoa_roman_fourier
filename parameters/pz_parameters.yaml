@@ -1,0 +1,27 @@
+---
+nz_grid:
+  zmin: 0.0
+  zmax: 4.0
+  dz: 0.01
+
+source_sample:
+  "1":
+    z_0: 1.0
+    alpha: 1.0
+    beta: 1.5
+    n_tomo_bins: 10
+    z_bias: 0.0
+    sigma_z: 0.03
+
+lens_sample:
+  "1":
+    z_0: 1.0  # placeholder, same as source
+    alpha: 1.0  # placeholder shape
+    beta: 1.5  # placeholder shape
+    n_tomo_bins: 5  # typical value for lens bins
+    bin_start: 0.1  # reasonable low-z bound
+    bin_stop: 1.2  # reasonable high-z bound
+    bin_spacing: 0.22  # (1.2 - 0.1) / 5 ~ spacing
+    z_bias: 0.0
+    sigma_z: 0.03
+...

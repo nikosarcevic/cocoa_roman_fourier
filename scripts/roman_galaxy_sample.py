@@ -21,9 +21,8 @@ class RomanGalaxySample:
     def __init__(self, forecast_year, redshift_range=None, decimal_places=None, verbose=False):
         # Load the YAML file
         # Define parameter file path internally (not exposed to user)
-        param_dir = "parameters"
         param_file = "pz_parameters.yaml"
-        yaml_path = os.path.join(param_dir, param_file)
+        yaml_path = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "parameters", param_file))
 
         # Load the YAML file
         with open(yaml_path, "r") as f:
@@ -31,20 +30,16 @@ class RomanGalaxySample:
 
         # Handle redshift grid setup
         if redshift_range is None:
-            nz_grid = survey_parameters.get("nz_grid", {})
-            zmin = nz_grid.get("zmin", 0.0)
-            zmax = nz_grid.get("zmax", 3.5)
-            dz = nz_grid.get("dz", None)
-
+            nz_grid = survey_parameters["nz_grid"]  # Raises KeyError if missing
+            zmin = nz_grid["zmin"]
+            zmax = nz_grid["zmax"]
+            dz = nz_grid["dz"]  # or use .get("dz") if it's optional
             if dz is not None:
                 self.redshift_range = np.arange(zmin, zmax, dz)
                 print(f"Using nz_grid with dz={dz}, zmin={zmin}, zmax={zmax}")
             else:
-                self.redshift_range = np.linspace(zmin, zmax, 500)
-                print(f"Using default linspace: ({zmin}, {zmax}) with 500 points.")
-        else:
-            self.redshift_range = redshift_range
-            print("Using user-provided redshift range.")
+                self.redshift_range = redshift_range
+                print("Using user-provided redshift range.")
 
         # Forecast year validation
         supported_forecast_years = {"1"}
@@ -227,7 +222,7 @@ class RomanGalaxySample:
 
         return rounded_bins
 
-    def lens_bin_centers(self, decimal_places=None, save_file=True, file_format="npy"):
+    def lens_bin_centers(self, decimal_places=2, save_file=True, file_format="npy"):
         """
         Compute the lens bin centers for the Roman forecast year.
 
@@ -250,7 +245,7 @@ class RomanGalaxySample:
 
         return bin_centers
 
-    def source_bin_centers(self, decimal_places=None, save_file=True, file_format="npy"):
+    def source_bin_centers(self, decimal_places=2, save_file=True, file_format="npy"):
         """
         Compute the source bin centers for the Roman forecast year.
 
@@ -294,15 +289,15 @@ class RomanGalaxySample:
             pivot_redshift: float
                 pivot redshift
             alpha: float
-                power law index in the exponent
+                power law index in the prefctor
             beta: float
-                power law index in the prefactor
+                power law index in the exponent
         Returns:
             redshift_distribution: array
                 A Smail-type redshift distribution over a range of redshifts.
                 """
 
-        redshift_distribution = [(z / pivot_redshift) ** beta * exp(-(z / pivot_redshift) ** alpha) for z in redshift_range]
+        redshift_distribution = [(z / pivot_redshift) ** alpha * exp(-(z / pivot_redshift) ** beta) for z in redshift_range]
 
         return np.array(redshift_distribution)
 

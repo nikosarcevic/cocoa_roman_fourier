@@ -4,3 +4,4 @@
 *.pyo
 *.cfg
 chains/
+/Roman_PZ/.ipynb_checkpoints/
